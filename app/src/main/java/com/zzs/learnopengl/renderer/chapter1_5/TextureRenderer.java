@@ -40,8 +40,9 @@ public class TextureRenderer extends BaseBufferOpenGLES {
         super(context, R.raw.chapter_1_5_texture_vert, R.raw.chapter_1_5_texture_frag);
         mTextureId = new int[1];
         mTextureId2 = new int[1];
+        //创建纹理
         mTextureId[0] = OpenGLKit.createTexture(context,resId);
-        mTextureId2[0] = OpenGLKit.createTexture(context,resId2);
+        mTextureId2[0] = OpenGLKit.createTexture(context,resId2,GLES31.GL_NEAREST,GLES31.GL_LINEAR,GLES31.GL_CLAMP_TO_EDGE,GLES31.GL_CLAMP_TO_EDGE);
     }
 
 
@@ -60,7 +61,7 @@ public class TextureRenderer extends BaseBufferOpenGLES {
 
     @Override
     protected void bindAttribute() {
-        //没有使用VAO  VBO
+        //绑定VBO的数据 VBO绑定在VAO上
         GLES31.glVertexAttribPointer(vPosition,3, GLES31.GL_FLOAT,false,32,0);
         GLES31.glEnableVertexAttribArray(vPosition);
 
@@ -80,6 +81,10 @@ public class TextureRenderer extends BaseBufferOpenGLES {
                 0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,   // 右下
                 -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,   // 左下
                 -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f    // 左上
+//                0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1-1.0f,   // 右上 纹理翻转解决方案1 翻转纹理坐标
+//                0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 1-0.0f,   // 右下
+//                -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 1-0.0f,   // 左下
+//                -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1-1.0f    // 左上
         };
     }
 
@@ -90,8 +95,9 @@ public class TextureRenderer extends BaseBufferOpenGLES {
         GLES31.glActiveTexture(GLES20.GL_TEXTURE0);
         //绑定纹理
         GLES31.glBindTexture(GLES31.GL_TEXTURE_2D,mTextureId[0]);
-        GLES31.glActiveTexture(GLES20.GL_TEXTURE1);
+        //指定 采样器 mTexture1 采样 index 为 0（既 GLES20.GL_TEXTURE0）所绑定的纹理 mTextureId[0]
         GLES31.glUniform1i(mTexture1,0);
+        GLES31.glActiveTexture(GLES20.GL_TEXTURE1);
         GLES31.glBindTexture(GLES20.GL_TEXTURE_2D,mTextureId2[0]);
         GLES31.glUniform1i(mTexture2,1);
         GLES31.glBindVertexArray(VAO[0]);

@@ -79,7 +79,8 @@ public class OpenGLKit {
         return program;
     }
 
-    public static int createTexture(Context context, int resId) {
+    public static int createTexture(Context context, int resId,int MIN_FILTER,int MAG_FILTER,int WRAP_S_ROUND,
+                                    int WRAP_T_ROUND) {
         Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(),resId);
         if (bitmap!=null){
             int[] texture = new int[1];
@@ -88,18 +89,23 @@ public class OpenGLKit {
             //绑定为一个2D纹理
             GLES31.glBindTexture(GLES31.GL_TEXTURE_2D,texture[0]);
             //设置缩小过滤为使用纹理中坐标最接近的一个像素的颜色作为需要绘制的像素颜色
-            GLES31.glTexParameterf(GLES31.GL_TEXTURE_2D, GLES31.GL_TEXTURE_MIN_FILTER,GLES31.GL_NEAREST);
+            GLES31.glTexParameteri(GLES31.GL_TEXTURE_2D, GLES31.GL_TEXTURE_MIN_FILTER,MIN_FILTER);
             //设置放大过滤为使用纹理中坐标最接近的若干个颜色，通过加权平均算法得到需要绘制的像素颜色
-            GLES31.glTexParameterf(GLES31.GL_TEXTURE_2D,GLES31.GL_TEXTURE_MAG_FILTER,GLES31.GL_LINEAR);
+            GLES31.glTexParameteri(GLES31.GL_TEXTURE_2D,GLES31.GL_TEXTURE_MAG_FILTER,MAG_FILTER);
             //设置环绕方向S，
-            GLES31.glTexParameterf(GLES31.GL_TEXTURE_2D, GLES31.GL_TEXTURE_WRAP_S,GLES31.GL_REPEAT);
+            GLES31.glTexParameteri(GLES31.GL_TEXTURE_2D, GLES31.GL_TEXTURE_WRAP_S,WRAP_S_ROUND);
             //设置环绕方向T,
-            GLES31.glTexParameterf(GLES31.GL_TEXTURE_2D, GLES31.GL_TEXTURE_WRAP_T,GLES31.GL_REPEAT);
+            GLES31.glTexParameteri(GLES31.GL_TEXTURE_2D, GLES31.GL_TEXTURE_WRAP_T,WRAP_T_ROUND);
             //绑定纹理数据
             GLUtils.texImage2D(GLES31.GL_TEXTURE_2D,0,bitmap,0);
             bitmap.recycle();
             return texture[0];
         }
         return 0;
+    }
+
+    public static int createTexture(Context context, int resId){
+        return createTexture(context, resId,GLES31.GL_NEAREST,GLES31.GL_LINEAR,GLES31.GL_REPEAT,GLES31.GL_REPEAT);
+
     }
 }

@@ -4,6 +4,7 @@ import android.content.Context
 import android.opengl.*
 import com.zzs.learnopengl.renderer.chapter1_4.ColorfulTriangleRenderer
 import com.zzs.learnopengl.renderer.chapter1_5.TextureRenderer
+import com.zzs.learnopengl.renderer.chapter1_6.MatrixRenderer
 import com.zzs.learnopengl.util.BaseOpenGLES
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
@@ -20,7 +21,8 @@ class MyRender(val context: Context) :GLSurfaceView.Renderer {
 
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
         GLES31.glClearColor(0.2f, 0.3f, 0.3f, 1.0f)
-        mRenderer = TextureRenderer(context,R.mipmap.wall,R.mipmap.awesomeface)
+        mRenderer = MatrixRenderer(context,R.mipmap.nums,R.mipmap.awesomeface)
+       // mRenderer = TextureRenderer(context,R.mipmap.nums,R.mipmap.awesomeface)
         //mRenderer = ColorfulTriangleRenderer(context)
         //mRenderer = TriangleRenderer(context)
        // mRenderer = RectangleRenderer(context)
@@ -36,7 +38,7 @@ class MyRender(val context: Context) :GLSurfaceView.Renderer {
         mRenderer.onDraw()
     }
 
-    public fun release(){
+    fun release(){
         mRenderer.release()
     }
 }

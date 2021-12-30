@@ -38,7 +38,7 @@ class MyGLSurfaceView : GLSurfaceView {
         }
         renderer = MyRender(context)
         setRenderer(renderer)
-        renderMode = GLSurfaceView.RENDERMODE_WHEN_DIRTY
+        renderMode = GLSurfaceView.RENDERMODE_CONTINUOUSLY
         sRunnable = Runnable {
             requestRender()
             sHandler.postDelayed(sRunnable, 3000)
