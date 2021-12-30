@@ -1,6 +1,7 @@
 package com.zzs.learnopengl
 
 import android.opengl.GLES32
+import android.opengl.GLUtils
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 

@@ -1,7 +1,6 @@
-package com.zzs.learnopengl.renderer.charter1_3;
+package com.zzs.learnopengl.renderer.chapter1_3;
 
 import android.content.Context;
-import android.opengl.GLES30;
 import android.opengl.GLES31;
 
 import com.zzs.learnopengl.R;
@@ -89,8 +88,6 @@ public class TriangleRenderer extends BaseOpenGLES {
 
         //使用了VAO 的情况下，直接绑定VAO 就可以了  不必每次都像上面那样绑定数据，绑定VAO可以只执行一次
         GLES31.glBindVertexArray(VAO[0]);
-
-
         GLES31.glDrawArrays(GLES31.GL_TRIANGLES,0,3);
     }
 }

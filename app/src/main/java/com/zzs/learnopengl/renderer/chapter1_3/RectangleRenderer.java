@@ -1,7 +1,6 @@
-package com.zzs.learnopengl.renderer.charter1_3;
+package com.zzs.learnopengl.renderer.chapter1_3;
 
 import android.content.Context;
-import android.opengl.GLES20;
 import android.opengl.GLES31;
 
 import com.zzs.learnopengl.R;
@@ -17,8 +16,8 @@ import java.util.Random;
  */
 public class RectangleRenderer extends BaseOpenGLES {
 
-    private int aPos;
-    private int colorHandle;
+    private int vPosition;
+    private int sColor;
     private static int[] indices = new int[]{0, 1, 3, 1, 2, 3};
 
     float color[] = {0.0f,1.0f, 0.5f, 1f};
@@ -33,8 +32,8 @@ public class RectangleRenderer extends BaseOpenGLES {
 
     @Override
     protected void init() {
-        aPos = GLES31.glGetAttribLocation(program,"vPosition");
-        colorHandle = GLES31.glGetUniformLocation(program,"sColor");
+        vPosition = GLES31.glGetAttribLocation(program,"vPosition");
+        sColor = GLES31.glGetUniformLocation(program,"sColor");
         indexBuffer = IntBuffer.allocate(indices.length);
         indexBuffer.clear();
         indexBuffer.put(indices);
@@ -63,11 +62,11 @@ public class RectangleRenderer extends BaseOpenGLES {
         vertexBuffer.position(0);
         float r = (float) Math.sin(System.currentTimeMillis()) / 2.0f +0.5f;
         color[0] = r;
-        GLES31.glVertexAttribPointer(aPos,3, GLES31.GL_FLOAT,false,12,vertexBuffer);
-        GLES31.glEnableVertexAttribArray(aPos);
+        GLES31.glVertexAttribPointer(vPosition,3, GLES31.GL_FLOAT,false,12,vertexBuffer);
+        GLES31.glEnableVertexAttribArray(vPosition);
        // GLES31.glUniform4fv(colorHandle,1,color,0);
-        GLES31.glUniform4f(colorHandle, random.nextFloat(),random.nextFloat(),random.nextFloat(),1.0f);
+        GLES31.glUniform4f(sColor, random.nextFloat(),random.nextFloat(),random.nextFloat(),1.0f);
         GLES31.glDrawElements(GLES31.GL_TRIANGLES,6,GLES31.GL_UNSIGNED_INT,indexBuffer);
-        GLES31.glDisableVertexAttribArray(aPos);
+        GLES31.glDisableVertexAttribArray(vPosition);
     }
 }

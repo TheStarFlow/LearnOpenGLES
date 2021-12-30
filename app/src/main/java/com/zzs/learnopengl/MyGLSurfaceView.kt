@@ -6,7 +6,10 @@ import android.opengl.GLSurfaceView
 import android.os.Handler
 import android.os.Looper
 import android.util.AttributeSet
+import android.util.Log
+import android.view.SurfaceHolder
 import androidx.core.view.doOnAttach
+import androidx.core.view.doOnDetach
 
 /**
 @author  zzs
@@ -43,5 +46,25 @@ class MyGLSurfaceView : GLSurfaceView {
         doOnAttach {
             sHandler.postDelayed(sRunnable, 3000)
         }
+        doOnDetach {
+            sHandler.removeCallbacksAndMessages(null)
+        }
+    }
+
+    override fun surfaceDestroyed(holder: SurfaceHolder) {
+        super.surfaceDestroyed(holder)
+        Log.i("MyGlSurfaceView","surfaceDestroyed thread name = ${Thread.currentThread().name}")
+
+    }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        renderer.release()
+        Log.i("MyGlSurfaceView","onDetach thread name = ${Thread.currentThread().name}")
+    }
+
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        Log.i("MyGlSurfaceView","onAttach thread name = ${Thread.currentThread().name}")
     }
 }

@@ -1,7 +1,11 @@
 package com.zzs.learnopengl.util;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.opengl.GLES31;
+import android.opengl.GLUtils;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -42,17 +46,23 @@ public class OpenGLKit {
         GLES31.glCompileShader(fShader);
         int[] state = new int[1];
         GLES31.glGetShaderiv(fShader,GLES31.GL_COMPILE_STATUS,state,0);
-        if (state[0]!=GLES31.GL_TRUE)
+        if (state[0]!=GLES31.GL_TRUE){
+            String log = GLES31.glGetShaderInfoLog(fShader);
             //加载片段着色器失败
-            throw new IllegalStateException("init fragment Shader failed");
+            throw new IllegalStateException("init fragment Shader failed : " + log);
+        }
+
 
         int vShader = GLES31.glCreateShader(GLES31.GL_VERTEX_SHADER);
         GLES31.glShaderSource(vShader,vertexShader);
         GLES31.glCompileShader(vShader);
         GLES31.glGetShaderiv(vShader,GLES31.GL_COMPILE_STATUS,state,0);
-        if (state[0]!=GLES31.GL_TRUE)
-        //加载顶点着色器失败
-            throw new IllegalStateException("init vertex Shader failed");
+        if (state[0]!=GLES31.GL_TRUE){
+            String log = GLES31.glGetShaderInfoLog(vShader);
+            //加载顶点着色器失败
+            throw new IllegalStateException("init vertex Shader failed :" + log);
+        }
+
 
         int program = GLES31.glCreateProgram();
         GLES31.glAttachShader(program,vShader);
@@ -67,5 +77,29 @@ public class OpenGLKit {
         GLES31.glDeleteShader(vShader);
         GLES31.glDeleteShader(fShader);
         return program;
+    }
+
+    public static int createTexture(Context context, int resId) {
+        Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(),resId);
+        if (bitmap!=null){
+            int[] texture = new int[1];
+            //生成一个纹理
+            GLES31.glGenTextures(1,texture,0);
+            //绑定为一个2D纹理
+            GLES31.glBindTexture(GLES31.GL_TEXTURE_2D,texture[0]);
+            //设置缩小过滤为使用纹理中坐标最接近的一个像素的颜色作为需要绘制的像素颜色
+            GLES31.glTexParameterf(GLES31.GL_TEXTURE_2D, GLES31.GL_TEXTURE_MIN_FILTER,GLES31.GL_NEAREST);
+            //设置放大过滤为使用纹理中坐标最接近的若干个颜色，通过加权平均算法得到需要绘制的像素颜色
+            GLES31.glTexParameterf(GLES31.GL_TEXTURE_2D,GLES31.GL_TEXTURE_MAG_FILTER,GLES31.GL_LINEAR);
+            //设置环绕方向S，
+            GLES31.glTexParameterf(GLES31.GL_TEXTURE_2D, GLES31.GL_TEXTURE_WRAP_S,GLES31.GL_REPEAT);
+            //设置环绕方向T,
+            GLES31.glTexParameterf(GLES31.GL_TEXTURE_2D, GLES31.GL_TEXTURE_WRAP_T,GLES31.GL_REPEAT);
+            //绑定纹理数据
+            GLUtils.texImage2D(GLES31.GL_TEXTURE_2D,0,bitmap,0);
+            bitmap.recycle();
+            return texture[0];
+        }
+        return 0;
     }
 }
