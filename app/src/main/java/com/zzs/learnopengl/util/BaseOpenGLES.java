@@ -23,6 +23,10 @@ public abstract class BaseOpenGLES {
     protected FloatBuffer vertexBuffer; //顶点坐标缓存区
     protected float[] mVertex;
 
+    protected float width;
+    protected float height;
+
+
 
     public BaseOpenGLES(Context context, int vertexShaderId, int fragmentShaderId) {
         this.mContext = context.getApplicationContext();
@@ -59,6 +63,19 @@ public abstract class BaseOpenGLES {
     @CallSuper
     public void release() {
         GLES20.glDeleteProgram(program);
+    }
+
+    public void setSize(int width, int height) {
+        this.width = width;
+        this.height = height;
+    }
+
+    public void setOnRotateChange(int progress) {
+
+    }
+
+    public void setOnZChange(int progress) {
+
     }
 }
 

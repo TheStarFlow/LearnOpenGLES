@@ -139,9 +139,21 @@ public class MatrixRenderer extends BaseBufferOpenGLES {
         GLES31.glBindVertexArray(VAO[0]);
         GLES31.glDrawElements(GLES31.GL_TRIANGLES,6,GLES31.GL_UNSIGNED_INT,indexBuffer);
 
-        GLES31.glBindTexture(GLES31.GL_TEXTURE_2D,0);
+        Matrix.setIdentityM(matrix,0);
+        //将矩阵 围绕（0,0,1）轴旋转 60 度
+        Matrix.rotateM(matrix,0,-120f,0f,0f,1f);
+        //将矩阵 按照 x,y,z 缩放
+        Matrix.scaleM(matrix,0,1f,1f,1f);
+        Matrix.translateM(matrix,0,0.5f,-0.5f,0f);
+        floatBuffer.clear();
+        floatBuffer.put(matrix);
+        floatBuffer.position(0);
+        GLES31.glUniformMatrix4fv(mMatrix,1,false,floatBuffer);//这里没有使用缓存 直接给着色器的矩阵赋值，后面可以尝试像顶点数组那样子使用缓冲对象 VBO给矩阵赋值
 
 
+        GLES31.glDrawElements(GLES31.GL_TRIANGLES,6,GLES31.GL_UNSIGNED_INT,indexBuffer);
+
+        GLES31.glBindVertexArray(0);
     }
 
     @Override

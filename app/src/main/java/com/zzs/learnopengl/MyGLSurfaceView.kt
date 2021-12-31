@@ -67,4 +67,14 @@ class MyGLSurfaceView : GLSurfaceView {
         super.onAttachedToWindow()
         Log.i("MyGlSurfaceView","onAttach thread name = ${Thread.currentThread().name}")
     }
+
+    fun onRotateChange(progress: Int) {
+        renderer.setOnRotateChange(progress)
+        requestRender()
+    }
+
+    fun onZChange(progress: Int) {
+        renderer.setOnZChange(progress)
+        requestRender()
+    }
 }
