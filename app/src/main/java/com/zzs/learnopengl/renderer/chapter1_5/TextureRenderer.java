@@ -27,7 +27,6 @@ public class TextureRenderer extends BaseBufferOpenGLES {
     private int vTexCoord;
     private static int[] indices = new int[]{0, 1, 3, 1, 2, 3};
 
-    float color[] = {0.0f,1.0f, 0.5f, 1f};
     private IntBuffer indexBuffer;
     private int mTexture1;
     private int mTexture2;

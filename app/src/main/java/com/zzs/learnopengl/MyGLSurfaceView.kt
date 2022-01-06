@@ -22,7 +22,8 @@ class MyGLSurfaceView : GLSurfaceView {
 
     private val sHandler = Handler(Looper.getMainLooper())
     private lateinit var sRunnable :Runnable
-
+    private val interval = 66L
+    private var postInterval = false
 
     constructor(context: Context?) : super(context)
     constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs)
@@ -39,15 +40,17 @@ class MyGLSurfaceView : GLSurfaceView {
         renderer = MyRender(context)
         setRenderer(renderer)
         renderMode = GLSurfaceView.RENDERMODE_CONTINUOUSLY
-        sRunnable = Runnable {
-            requestRender()
-            sHandler.postDelayed(sRunnable, 3000)
-        }
-        doOnAttach {
-            sHandler.postDelayed(sRunnable, 3000)
-        }
-        doOnDetach {
-            sHandler.removeCallbacksAndMessages(null)
+        if (postInterval){
+            sRunnable = Runnable {
+                requestRender()
+                sHandler.postDelayed(sRunnable, interval)
+            }
+            doOnAttach {
+                sHandler.postDelayed(sRunnable, interval)
+            }
+            doOnDetach {
+                sHandler.removeCallbacksAndMessages(null)
+            }
         }
     }
 
@@ -70,11 +73,11 @@ class MyGLSurfaceView : GLSurfaceView {
 
     fun onRotateChange(progress: Int) {
         renderer.setOnRotateChange(progress)
-        requestRender()
+      //  requestRender()
     }
 
     fun onZChange(progress: Int) {
         renderer.setOnZChange(progress)
-        requestRender()
+      //  requestRender()
     }
 }

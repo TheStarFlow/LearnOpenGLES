@@ -6,6 +6,7 @@ import com.zzs.learnopengl.renderer.chapter1_4.ColorfulTriangleRenderer
 import com.zzs.learnopengl.renderer.chapter1_5.TextureRenderer
 import com.zzs.learnopengl.renderer.chapter1_6.MatrixRenderer
 import com.zzs.learnopengl.renderer.chapter1_7.Coords3DRenderer
+import com.zzs.learnopengl.renderer.chapter1_8.CameraRenderer
 import com.zzs.learnopengl.util.BaseOpenGLES
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
@@ -22,7 +23,8 @@ class MyRender(val context: Context) :GLSurfaceView.Renderer {
 
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
         GLES31.glClearColor(0.2f, 0.3f, 0.3f, 1.0f)
-        mRenderer = Coords3DRenderer(context,R.mipmap.background,R.mipmap.girl)
+        mRenderer = CameraRenderer(context,R.mipmap.background,R.mipmap.girl)
+       // mRenderer = Coords3DRenderer(context,R.mipmap.background,R.mipmap.girl)
        // mRenderer = MatrixRenderer(context,R.mipmap.nums,R.mipmap.awesomeface)
        // mRenderer = TextureRenderer(context,R.mipmap.nums,R.mipmap.awesomeface)
         //mRenderer = ColorfulTriangleRenderer(context)

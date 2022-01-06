@@ -99,6 +99,7 @@ public class OpenGLKit {
             //绑定纹理数据
             GLUtils.texImage2D(GLES31.GL_TEXTURE_2D,0,bitmap,0);
             bitmap.recycle();
+            GLES31.glBindTexture(GLES31.GL_TEXTURE_2D,0);
             return texture[0];
         }
         return 0;

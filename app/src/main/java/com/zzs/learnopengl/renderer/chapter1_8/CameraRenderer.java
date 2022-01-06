@@ -1,28 +1,26 @@
-package com.zzs.learnopengl.renderer.chapter1_7;
+package com.zzs.learnopengl.renderer.chapter1_8;
 
 import android.content.Context;
 import android.opengl.GLES20;
 import android.opengl.GLES31;
 import android.opengl.Matrix;
-
-import androidx.core.util.SizeKt;
+import android.os.SystemClock;
+import android.util.Log;
 
 import com.zzs.learnopengl.R;
 import com.zzs.learnopengl.Vec3;
 import com.zzs.learnopengl.util.BaseBufferOpenGLES;
 import com.zzs.learnopengl.util.OpenGLKit;
 
-import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 /**
  * @author zzs
- * @Date 2021/12/31
+ * @Date 2022/1/5
  * @describe
  */
-public class Coords3DRenderer extends BaseBufferOpenGLES {
+public class CameraRenderer extends BaseBufferOpenGLES {
 
     private int vPosition;
     private int vTexCoord;
@@ -46,7 +44,10 @@ public class Coords3DRenderer extends BaseBufferOpenGLES {
 
     private List<Vec3> coords ;
 
-    public Coords3DRenderer(Context context, int resId, int resId2) {
+   // private static float[] mCamera = new float[16];
+
+
+    public CameraRenderer(Context context, int resId, int resId2) {
         super(context, R.raw.chapter_1_7_coords_vert, R.raw.chapter_1_7_coord_frag);
         mTextureId = new int[1];
         mTextureId2 = new int[1];
@@ -59,6 +60,7 @@ public class Coords3DRenderer extends BaseBufferOpenGLES {
 
     @Override
     protected void loadAttribute() {
+        //获取句柄
         vPosition = GLES31.glGetAttribLocation(program,"vPosition");
         vTexCoord = GLES31.glGetAttribLocation(program,"aTexCoord");
         mTexture1 = GLES31.glGetUniformLocation(program,"outTexture");
@@ -142,15 +144,22 @@ public class Coords3DRenderer extends BaseBufferOpenGLES {
         Matrix.setIdentityM(mModelMatrix,0);
         Matrix.setIdentityM(mViewMatrix,0);
         Matrix.setIdentityM(mProjectionMatrix,0);
+
+        float radius = 10f;
+        float camX = (float) (Math.sin(SystemClock.uptimeMillis())*radius);
+        Log.d("CAMX","CAMX = " + camX);
+       // float camZ = (float) (Math.cos(SystemClock.uptimeMillis())*radius);
+        Matrix.setLookAtM(mViewMatrix,0,camX,0.0f,8f,0.0f,0.0f,0.0f,0.0f,1.0f,0.0f);
+        //  Matrix.setIdentityM(mCamera,0);
         //变换矩阵
-        Matrix.rotateM(mModelMatrix,0,mRotateDegree,1f,0.5f,0.2f);
-        Matrix.translateM(mViewMatrix,0,0.0f,0.0f,0-mZDis);
+      //  Matrix.rotateM(mModelMatrix,0,mRotateDegree,1f,0.5f,0.2f);
         Matrix.perspectiveM(mProjectionMatrix,0,45f,width/height,0.1f,100f);//一般的固定设置
 
         GLES31.glUseProgram(program);
-        GLES31.glUniformMatrix4fv(model,1,false,mModelMatrix,0);
+       // GLES31.glUniformMatrix4fv(model,1,false,mModelMatrix,0);
         GLES31.glUniformMatrix4fv(view,1,false,mViewMatrix,0);
         GLES31.glUniformMatrix4fv(projection,1,false,mProjectionMatrix,0);
+
         //因为我们使用了深度测试，我们也想要在每次渲染迭代之前清除深度缓冲（否则前一帧的深度信息仍然保存在缓冲中）。
         // 就像清除颜色缓冲一样，我们可以通过在glClear函数中指定DEPTH_BUFFER_BIT位来清除深度缓冲：
         GLES31.glClear(GLES20.GL_COLOR_BUFFER_BIT|GLES20.GL_DEPTH_BUFFER_BIT);
@@ -169,15 +178,15 @@ public class Coords3DRenderer extends BaseBufferOpenGLES {
         for (int i = 0; i < coords.size(); i++) {
             Vec3 vec3 = coords.get(i);
             Matrix.setIdentityM(mModelMatrix,0);
-            float degree = (mRotateDegree*vec3.getY()*vec3.getX()*vec3.getZ()) % 360;
-            Matrix.rotateM(mModelMatrix,0,degree,1.0f,0.3f,0.5f);
+            float degree = 20f*i;
             Matrix.translateM(mModelMatrix,0,vec3.getX(),vec3.getY(),vec3.getZ());
+            Matrix.rotateM(mModelMatrix,0,degree,1.0f,0.3f,0.5f);
             GLES31.glUniformMatrix4fv(model,1,false,mModelMatrix,0);
             GLES31.glDrawArrays(GLES31.GL_TRIANGLES,0,36);
         }
 
-       // GLES31.glDrawElements(GLES31.GL_TRIANGLES,6,GLES31.GL_UNSIGNED_INT,indexBuffer);
-        GLES31.glBindTexture(GLES31.GL_TEXTURE_2D,0);
+        // GLES31.glDrawElements(GLES31.GL_TRIANGLES,6,GLES31.GL_UNSIGNED_INT,indexBuffer);
+        //GLES31.glBindTexture(GLES31.GL_TEXTURE_2D,0);
     }
 
     @Override
@@ -191,12 +200,12 @@ public class Coords3DRenderer extends BaseBufferOpenGLES {
     @Override
     public void setOnRotateChange(int progress) {
         super.setOnRotateChange(progress);
-        mRotateDegree = progress;
+       // mRotateDegree = progress;
     }
 
     @Override
     public void setOnZChange(int progress) {
         super.setOnZChange(progress);
-        mZDis = progress;
+       // mZDis = progress;
     }
 }

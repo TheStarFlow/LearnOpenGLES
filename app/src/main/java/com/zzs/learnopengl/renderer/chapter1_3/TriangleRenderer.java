@@ -59,7 +59,8 @@ public class TriangleRenderer extends BaseOpenGLES {
         //把顶点数据复制到定义的VBO缓冲区
         GLES31.glBufferData(GLES31.GL_ARRAY_BUFFER,getVertexLength()*4,vertexBuffer,GLES31.GL_STATIC_DRAW);
         //把缓冲区的数据链接到顶点属性
-        GLES31.glVertexAttribPointer(aPos,4,GLES31.GL_FLOAT,false,16,0);
+        //stride 步骤，下一个数据距离多少个字节，4 * 4（float长度） = 16 ，offset 数据的偏移 4,既一个float
+        GLES31.glVertexAttribPointer(aPos,4,GLES31.GL_FLOAT,false,16,4);
         GLES31.glEnableVertexAttribArray(aPos);
         //解绑VBO
         GLES31.glBindBuffer(GLES31.GL_ARRAY_BUFFER,0);
@@ -71,7 +72,7 @@ public class TriangleRenderer extends BaseOpenGLES {
     protected float[] getVertexArray() {
         return new float[]{
                 //x,y,z,w
-                -0.5f, -0.5f, 0.0f,1.0f,
+                1.0f,-0.5f, -0.5f, 0.0f,1.0f,
                 0.5f, -0.5f, 0.0f,1.0f,
                 0.0f,  0.5f, 0.0f,1.0f
         };
