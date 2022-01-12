@@ -1,11 +1,14 @@
 package com.zzs.learnopengl.renderer.chapter1_8;
 
+import android.animation.ValueAnimator;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.opengl.GLES20;
 import android.opengl.GLES31;
 import android.opengl.Matrix;
 import android.os.SystemClock;
-import android.util.Log;
+
+import androidx.arch.core.executor.ArchTaskExecutor;
 
 import com.zzs.learnopengl.R;
 import com.zzs.learnopengl.Vec3;
@@ -43,6 +46,7 @@ public class CameraRenderer extends BaseBufferOpenGLES {
     private static float[] mProjectionMatrix = new float[16]; //有透视效果（顶点越远，变得越小）。
 
     private List<Vec3> coords ;
+    private ValueAnimator mDegreeAnim;
 
    // private static float[] mCamera = new float[16];
 
@@ -56,6 +60,30 @@ public class CameraRenderer extends BaseBufferOpenGLES {
         mTextureId2[0] = OpenGLKit.createTexture(context,resId2, GLES31.GL_NEAREST,GLES31.GL_LINEAR,GLES31.GL_CLAMP_TO_EDGE,GLES31.GL_CLAMP_TO_EDGE);
         //启用深度测试  后面的像素覆盖前面的像素
         GLES31.glEnable(GLES31.GL_DEPTH_TEST);
+        createDegreeAnim();
+    }
+
+    private volatile int degree;
+
+    @SuppressLint("RestrictedApi")
+    private void createDegreeAnim() {
+        ArchTaskExecutor.getInstance().postToMainThread(new Runnable() {
+            @Override
+            public void run() {
+                mDegreeAnim = ValueAnimator.ofInt(1,360);
+                mDegreeAnim.setInterpolator(null);
+                mDegreeAnim.setRepeatCount(ValueAnimator.INFINITE);
+                mDegreeAnim.setDuration(20000);
+                mDegreeAnim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                    @Override
+                    public void onAnimationUpdate(ValueAnimator animation) {
+                        degree = (int) animation.getAnimatedValue();
+                    }
+                });
+                mDegreeAnim.start();
+            }
+        });
+
     }
 
     @Override
@@ -146,10 +174,9 @@ public class CameraRenderer extends BaseBufferOpenGLES {
         Matrix.setIdentityM(mProjectionMatrix,0);
 
         float radius = 10f;
-        float camX = (float) (Math.sin(SystemClock.uptimeMillis())*radius);
-        Log.d("CAMX","CAMX = " + camX);
-       // float camZ = (float) (Math.cos(SystemClock.uptimeMillis())*radius);
-        Matrix.setLookAtM(mViewMatrix,0,camX,0.0f,8f,0.0f,0.0f,0.0f,0.0f,1.0f,0.0f);
+        float camX = (float) (Math.sin(Math.toRadians(degree))*radius);
+        float camZ = (float) (Math.cos(Math.toRadians(degree))*radius);
+        Matrix.setLookAtM(mViewMatrix,0,camX,0.0f,camZ,0.0f,0.0f,0.0f,0.0f,1.0f,0.0f);
         //  Matrix.setIdentityM(mCamera,0);
         //变换矩阵
       //  Matrix.rotateM(mModelMatrix,0,mRotateDegree,1f,0.5f,0.2f);

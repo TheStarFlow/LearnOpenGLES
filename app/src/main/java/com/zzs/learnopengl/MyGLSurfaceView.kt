@@ -22,7 +22,7 @@ class MyGLSurfaceView : GLSurfaceView {
 
     private val sHandler = Handler(Looper.getMainLooper())
     private lateinit var sRunnable :Runnable
-    private val interval = 66L
+    private val interval = 1000L
     private var postInterval = false
 
     constructor(context: Context?) : super(context)

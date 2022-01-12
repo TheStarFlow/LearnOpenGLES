@@ -23,7 +23,7 @@ class MyRender(val context: Context) :GLSurfaceView.Renderer {
 
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
         GLES31.glClearColor(0.2f, 0.3f, 0.3f, 1.0f)
-        mRenderer = CameraRenderer(context,R.mipmap.background,R.mipmap.girl)
+        mRenderer = CameraRenderer(context,R.mipmap.background,R.mipmap.wall)
        // mRenderer = Coords3DRenderer(context,R.mipmap.background,R.mipmap.girl)
        // mRenderer = MatrixRenderer(context,R.mipmap.nums,R.mipmap.awesomeface)
        // mRenderer = TextureRenderer(context,R.mipmap.nums,R.mipmap.awesomeface)
