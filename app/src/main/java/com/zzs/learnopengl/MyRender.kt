@@ -2,11 +2,7 @@ package com.zzs.learnopengl
 
 import android.content.Context
 import android.opengl.*
-import com.zzs.learnopengl.renderer.chapter1_4.ColorfulTriangleRenderer
-import com.zzs.learnopengl.renderer.chapter1_5.TextureRenderer
-import com.zzs.learnopengl.renderer.chapter1_6.MatrixRenderer
-import com.zzs.learnopengl.renderer.chapter1_7.Coords3DRenderer
-import com.zzs.learnopengl.renderer.chapter1_8.CameraRenderer
+import com.zzs.learnopengl.renderer.chapter1_8.GestureCameraRenderer
 import com.zzs.learnopengl.util.BaseOpenGLES
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
@@ -16,14 +12,15 @@ import javax.microedition.khronos.opengles.GL10
 @Date 2021/12/28
 @describe
  */
-class MyRender(val context: Context) :GLSurfaceView.Renderer {
+class MyRender(val context: Context, val myGLSurfaceView: MyGLSurfaceView) :GLSurfaceView.Renderer {
 
     private lateinit var mRenderer: BaseOpenGLES
 
 
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
         GLES31.glClearColor(0.2f, 0.3f, 0.3f, 1.0f)
-        mRenderer = CameraRenderer(context,R.mipmap.background,R.mipmap.wall)
+        mRenderer = GestureCameraRenderer(context,R.mipmap.background,R.mipmap.wall)
+        (mRenderer as GestureCameraRenderer).setGlSurface(myGLSurfaceView)
        // mRenderer = Coords3DRenderer(context,R.mipmap.background,R.mipmap.girl)
        // mRenderer = MatrixRenderer(context,R.mipmap.nums,R.mipmap.awesomeface)
        // mRenderer = TextureRenderer(context,R.mipmap.nums,R.mipmap.awesomeface)
@@ -54,4 +51,9 @@ class MyRender(val context: Context) :GLSurfaceView.Renderer {
     fun setOnZChange(progress: Int) {
         mRenderer.setOnZChange(progress)
     }
+
+    fun setMoveOn(dx: Float, dy: Float, currSpeed: Float) {
+        (mRenderer as GestureCameraRenderer).moveCamera(dx,dy,currSpeed)
+    }
+
 }

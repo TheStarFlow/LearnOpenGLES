@@ -10,21 +10,9 @@
         android:id="@+id/mRenderer"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-    <androidx.appcompat.widget.AppCompatSeekBar
+    <com.zzs.learnopengl.widget.CameraGestureView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@id/rotateSeekBar"
-        android:layout_marginBottom="20dp"
-        android:max="10"
-        android:progress="3"
-        android:id="@+id/zBar"/>
-
-    <androidx.appcompat.widget.AppCompatSeekBar
-        android:id="@+id/rotateSeekBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:max="360"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="30dp"/>
+        android:layout_height="match_parent"
+        android:id="@+id/mGesture"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

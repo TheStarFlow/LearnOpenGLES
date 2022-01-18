@@ -4,8 +4,10 @@ import android.opengl.GLES32
 import android.opengl.GLUtils
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.SeekBar
 import androidx.appcompat.widget.AppCompatSeekBar
+import com.zzs.learnopengl.widget.CameraGestureView
 
 class MainActivity : AppCompatActivity() {
 
@@ -15,37 +17,14 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         supportActionBar?.hide()
         mMyGLSurfaceView = findViewById(R.id.mRenderer)
-        val seekBar = findViewById<SeekBar>(R.id.rotateSeekBar)
-        seekBar.setOnSeekBarChangeListener(object :SeekBar.OnSeekBarChangeListener{
-            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                if (fromUser){
-                    mMyGLSurfaceView.onRotateChange(progress)
-                }
+        val gesture = findViewById<CameraGestureView>(R.id.mGesture)
+        gesture.moveCallBack = object :CameraGestureView.OnMoveCallBack{
+
+            override fun onMove(dx: Float, dy: Float, currSpeed: Float) {
+                Log.d("Gesture","dx:$dx  dy:$dy currSpeed:$currSpeed")
+                mMyGLSurfaceView.setOnMove(-dx,dy,currSpeed)
             }
-
-            override fun onStartTrackingTouch(seekBar: SeekBar?) {
-
-            }
-
-            override fun onStopTrackingTouch(seekBar: SeekBar?) {
-
-            }
-        })
-        val zBAR = findViewById<AppCompatSeekBar>(R.id.zBar);
-        zBAR.setOnSeekBarChangeListener(object :SeekBar.OnSeekBarChangeListener{
-            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                mMyGLSurfaceView.onZChange(progress)
-            }
-
-            override fun onStartTrackingTouch(seekBar: SeekBar?) {
-                
-            }
-
-            override fun onStopTrackingTouch(seekBar: SeekBar?) {
-                
-            }
-
-        })
+        }
     }
 
     override fun onResume() {

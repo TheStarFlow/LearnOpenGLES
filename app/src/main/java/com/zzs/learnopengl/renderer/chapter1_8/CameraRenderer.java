@@ -80,7 +80,7 @@ public class CameraRenderer extends BaseBufferOpenGLES {
                         degree = (int) animation.getAnimatedValue();
                     }
                 });
-                mDegreeAnim.start();
+               // mDegreeAnim.start();
             }
         });
 
