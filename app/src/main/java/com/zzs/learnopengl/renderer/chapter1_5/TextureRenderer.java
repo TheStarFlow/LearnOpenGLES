@@ -14,6 +14,9 @@ import com.zzs.learnopengl.R;
 import com.zzs.learnopengl.util.BaseBufferOpenGLES;
 import com.zzs.learnopengl.util.BaseOpenGLES;
 import com.zzs.learnopengl.util.OpenGLKit;
+
+import org.jetbrains.annotations.NotNull;
+
 import java.nio.IntBuffer;
 /**
  * @author zzs
@@ -34,6 +37,11 @@ public class TextureRenderer extends BaseBufferOpenGLES {
     private int[] mTextureId;
     private int[] mTextureId2;
 
+    private float[] mMatrix;
+
+    private int vMatrix;
+
+
 
     public TextureRenderer(Context context,int resId,int resId2) {
         super(context, R.raw.chapter_1_5_texture_vert, R.raw.chapter_1_5_texture_frag);
@@ -52,6 +60,7 @@ public class TextureRenderer extends BaseBufferOpenGLES {
         vTexCoord = GLES31.glGetAttribLocation(program,"aTexCoord");
         mTexture1 = GLES31.glGetUniformLocation(program,"outTexture");
         mTexture2 = GLES31.glGetUniformLocation(program,"outTexture2");
+        vMatrix = GLES20.glGetUniformLocation(program,"vMatrix");
         indexBuffer = IntBuffer.allocate(indices.length);
         indexBuffer.clear();
         indexBuffer.put(indices);
@@ -103,8 +112,23 @@ public class TextureRenderer extends BaseBufferOpenGLES {
         GLES31.glDrawElements(GLES31.GL_TRIANGLES,6,GLES31.GL_UNSIGNED_INT,indexBuffer);
 
         GLES31.glBindTexture(GLES31.GL_TEXTURE_2D,0);
+    }
 
+    @Override
+    public int onDraw(int texName) {
+        GLES31.glUseProgram(program);
+        //激活纹理
+        GLES31.glActiveTexture(GLES20.GL_TEXTURE0);
+        //绑定纹理
+        GLES31.glBindTexture(GLES31.GL_TEXTURE_2D,texName);
+        //指定 采样器 mTexture1 采样 index 为 0（既 GLES20.GL_TEXTURE0）所绑定的纹理 mTextureId[0]
+        GLES31.glUniform1i(mTexture1,0);
 
+        GLES31.glBindVertexArray(VAO[0]);
+        GLES31.glDrawElements(GLES31.GL_TRIANGLES,6,GLES31.GL_UNSIGNED_INT,indexBuffer);
+
+        GLES31.glBindTexture(GLES31.GL_TEXTURE_2D,0);
+        return super.onDraw(texName);
     }
 
     @Override
@@ -115,5 +139,10 @@ public class TextureRenderer extends BaseBufferOpenGLES {
         GLES31.glDisableVertexAttribArray(sColor);
         GLES31.glDisableVertexAttribArray(vTexCoord);
         super.release();
+    }
+
+    public void setMatrix(@NotNull float[] mMatrix) {
+        this.mMatrix  = mMatrix;
+        GLES20.glUniformMatrix4fv(vMatrix,1,false,mMatrix,0);
     }
 }

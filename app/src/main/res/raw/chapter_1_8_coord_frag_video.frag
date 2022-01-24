@@ -2,22 +2,20 @@
 precision mediump float; //需要制定精度  否则一些低版本可能报错
 out vec4 vColor;
 
-in vec4 ourColor;
 in vec2 TexCoord;
-
-
 
 uniform sampler2D outTexture;
 uniform sampler2D outTexture2;
 
 void main(){
-    vColor =  texture(outTexture, TexCoord); //单个纹理采样
+   // vColor =  texture(outTexture, TexCoord) * ourColor; //单个纹理采样
     //vColor = mix(texture(outTexture,TexCoord),texture(outTexture2,TexCoord),0.2); //正常渲染纹理（会翻转）
+
 //    vec2 reverseTexCoord = vec2(TexCoord.x,1.0 -TexCoord.y);
 //    vec4 background = texture(outTexture,reverseTexCoord);
-//    vec2 lt = vec2(reverseTexCoord.x * 2.0 ,reverseTexCoord.y * 2.0);
-//    vec4 ltt = texture(outTexture2,lt);
-//    vColor = mix(background,ltt,0.2);
+//    vec4 content = texture(outTexture2,reverseTexCoord);
+//    vColor = mix(background,content,0.8);
+    vColor = texture(outTexture2,TexCoord);
 
     //一下代码实现了笑脸渲染在左边的上面跟下面
 //    vec2 reverseTexCoord = vec2(TexCoord.x,1.0 -TexCoord.y);

@@ -1,4 +1,4 @@
-precision mediump float;
+precision mediump float;//指定精度
 varying vec2 aCoord;
 
 uniform sampler2D  vTexture;

@@ -1,16 +1,12 @@
 package com.zzs.learnopengl.renderer.chapter1_8;
 
 import android.animation.ValueAnimator;
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.opengl.GLES20;
 import android.opengl.GLES31;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
 
-import androidx.arch.core.executor.ArchTaskExecutor;
-
-import com.zzs.learnopengl.MyGLSurfaceView;
 import com.zzs.learnopengl.R;
 import com.zzs.learnopengl.Vec3;
 import com.zzs.learnopengl.util.BaseBufferOpenGLES;
@@ -26,7 +22,7 @@ import java.util.List;
  * @Date 2022/1/18
  * @describe
  */
-public class GestureCameraRenderer extends BaseBufferOpenGLES {
+public class GestureVideoCameraRenderer extends BaseBufferOpenGLES {
 
     private int vPosition;
     private int vTexCoord;
@@ -55,47 +51,22 @@ public class GestureCameraRenderer extends BaseBufferOpenGLES {
     private Vec3 mCameraUp = new Vec3(0.0f, 1.0f, 0.0f);
     private GLSurfaceView mSurfaceView;
 
+    int[] frameBuffer;
+    int[] frameData;
+
+
     // private static float[] mCamera = new float[16];
 
 
-    public GestureCameraRenderer(Context context, int resId, int resId2) {
-        super(context, R.raw.chapter_1_7_coords_vert, R.raw.chapter_1_7_coord_frag);
+    public GestureVideoCameraRenderer(Context context,int resId,int resId2) {
+        super(context, R.raw.chapter_1_7_coords_vert, R.raw.chapter_1_8_coord_frag_video);
         mTextureId = new int[1];
         mTextureId2 = new int[1];
         //创建纹理
-        mTextureId[0] = OpenGLKit.createTexture(context, resId);
-        mTextureId2[0] = OpenGLKit.createTexture(context, resId2, GLES31.GL_NEAREST, GLES31.GL_LINEAR, GLES31.GL_CLAMP_TO_EDGE, GLES31.GL_CLAMP_TO_EDGE);
+       // mTextureId[0] = OpenGLKit.createTexture(context, resId);
+      //  mTextureId2[0] = OpenGLKit.createTexture(context, resId2, GLES31.GL_NEAREST, GLES31.GL_LINEAR, GLES31.GL_CLAMP_TO_EDGE, GLES31.GL_CLAMP_TO_EDGE);
         //启用深度测试  前面的像素覆盖后面的像素
         GLES31.glEnable(GLES31.GL_DEPTH_TEST);
-        createDegreeAnim();
-    }
-
-    private volatile float degree;
-
-    @SuppressLint("RestrictedApi")
-    private void createDegreeAnim() {
-        ArchTaskExecutor.getInstance().postToMainThread(new Runnable() {
-            @Override
-            public void run() {
-                mDegreeAnim = ValueAnimator.ofFloat(0f, 10f);
-                mDegreeAnim.setInterpolator(null);
-                mDegreeAnim.setRepeatCount(ValueAnimator.INFINITE);
-                mDegreeAnim.setRepeatMode(ValueAnimator.REVERSE);
-                mDegreeAnim.setDuration(6000);
-                mDegreeAnim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                    @Override
-                    public void onAnimationUpdate(ValueAnimator animation) {
-                        degree = (float) animation.getAnimatedValue();
-                        mCameraPos.setX(degree);
-                        if (mSurfaceView!=null){
-                            mSurfaceView.requestRender();
-                        }
-                    }
-                });
-               // mDegreeAnim.start();
-            }
-        });
-
     }
 
     @Override
@@ -180,6 +151,11 @@ public class GestureCameraRenderer extends BaseBufferOpenGLES {
 
     @Override
     public void onDraw() {
+
+    }
+
+    @Override
+    public int onDraw(int texName) {
         //置为单位矩阵
         Matrix.setIdentityM(mModelMatrix, 0);
         Matrix.setIdentityM(mViewMatrix, 0);
@@ -200,18 +176,18 @@ public class GestureCameraRenderer extends BaseBufferOpenGLES {
         //因为我们使用了深度测试，我们也想要在每次渲染迭代之前清除深度缓冲（否则前一帧的深度信息仍然保存在缓冲中）。
         // 就像清除颜色缓冲一样，我们可以通过在glClear函数中指定DEPTH_BUFFER_BIT位来清除深度缓冲：
         GLES31.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
-        //激活纹理
-        GLES31.glActiveTexture(GLES20.GL_TEXTURE0);
-        //绑定纹理
-        GLES31.glBindTexture(GLES31.GL_TEXTURE_2D, mTextureId[0]);
-        //指定 采样器 mTexture1 采样 index 为 0（既 GLES20.GL_TEXTURE0）所绑定的纹理 mTextureId[0]
-        GLES31.glUniform1i(mTexture1, 0);
+//        //激活纹理
+//        GLES31.glActiveTexture(GLES20.GL_TEXTURE0);
+//        //绑定纹理
+//        GLES31.glBindTexture(GLES31.GL_TEXTURE_2D, mTextureId[0]);
+//        //指定 采样器 mTexture1 采样 index 为 0（既 GLES20.GL_TEXTURE0）所绑定的纹理 mTextureId[0]
+//        GLES31.glUniform1i(mTexture1, 0);
+//
         GLES31.glActiveTexture(GLES20.GL_TEXTURE1);
-        GLES31.glBindTexture(GLES20.GL_TEXTURE_2D, mTextureId2[0]);
+        GLES31.glBindTexture(GLES20.GL_TEXTURE_2D, texName);
         GLES31.glUniform1i(mTexture2, 1);
 
         GLES31.glBindVertexArray(VAO[0]);
-
         for (int i = 0; i < coords.size(); i++) {
             Vec3 vec3 = coords.get(i);
             Matrix.setIdentityM(mModelMatrix, 0);
@@ -221,9 +197,7 @@ public class GestureCameraRenderer extends BaseBufferOpenGLES {
             GLES31.glUniformMatrix4fv(model, 1, false, mModelMatrix, 0);
             GLES31.glDrawArrays(GLES31.GL_TRIANGLES, 0, 36);
         }
-
-        // GLES31.glDrawElements(GLES31.GL_TRIANGLES,6,GLES31.GL_UNSIGNED_INT,indexBuffer);
-        //GLES31.glBindTexture(GLES31.GL_TEXTURE_2D,0);
+        return texName;
     }
 
     @Override
@@ -263,4 +237,40 @@ public class GestureCameraRenderer extends BaseBufferOpenGLES {
     public void setGlSurface(@NotNull GLSurfaceView myGLSurfaceView) {
             mSurfaceView = myGLSurfaceView;
     }
+
+    public void initFBO(int width, int height) {
+        frameBuffer = new int[1];
+        GLES20.glGenFramebuffers(1, frameBuffer, 0);
+
+        frameData = new int[1];
+        GLES20.glGenTextures(1, frameData, 0);
+
+        //do bind
+        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, frameData[0]);
+        GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_NEAREST);
+        GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_LINEAR);
+        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, 0);
+        //do operation
+        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, frameData[0]);
+        GLES20.glTexImage2D(GLES20.GL_TEXTURE_2D, 0, GLES20.GL_RGBA, width, height, 0, GLES20.GL_RGBA, GLES20.GL_UNSIGNED_BYTE, null);
+        //do bind frame buffer
+        GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, frameBuffer[0]);
+        GLES20.glFramebufferTexture2D(GLES20.GL_FRAMEBUFFER, GLES20.GL_COLOR_ATTACHMENT0, GLES20.GL_TEXTURE_2D, frameData[0], 0);
+        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, 0);
+        GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0);
+    }
+
+    public void doBindBuffer() {
+        GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, frameBuffer[0]);
+    }
+
+    public void unBindBuffer() {
+        GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0);
+    }
+
+    public int getFboTex() {
+        return frameData[0];
+    }
+
+
 }

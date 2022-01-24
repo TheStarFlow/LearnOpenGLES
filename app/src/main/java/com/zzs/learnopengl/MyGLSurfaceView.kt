@@ -7,11 +7,11 @@ import android.os.Handler
 import android.os.Looper
 import android.util.AttributeSet
 import android.util.Log
-import android.view.GestureDetector
 import android.view.SurfaceHolder
 import androidx.core.view.doOnAttach
 import androidx.core.view.doOnDetach
-import com.zzs.learnopengl.renderer.chapter1_8.GestureCameraRenderer
+import com.zzs.learnopengl.glrender.MyRender
+import com.zzs.learnopengl.glrender.MyVideoRender
 
 /**
 @author  zzs
@@ -20,7 +20,7 @@ import com.zzs.learnopengl.renderer.chapter1_8.GestureCameraRenderer
  */
 class MyGLSurfaceView : GLSurfaceView {
 
-    private val renderer: MyRender
+    private val renderer: MyVideoRender
 
     private val sHandler = Handler(Looper.getMainLooper())
     private lateinit var sRunnable: Runnable
@@ -39,7 +39,7 @@ class MyGLSurfaceView : GLSurfaceView {
         } else {
             setEGLContextClientVersion(2)
         }
-        renderer = MyRender(context, this)
+        renderer = MyVideoRender(context, this)
         setRenderer(renderer)
         renderMode = GLSurfaceView.RENDERMODE_WHEN_DIRTY
         if (postInterval) {

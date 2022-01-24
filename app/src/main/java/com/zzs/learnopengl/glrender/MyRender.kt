@@ -1,7 +1,9 @@
-package com.zzs.learnopengl
+package com.zzs.learnopengl.glrender
 
 import android.content.Context
 import android.opengl.*
+import com.zzs.learnopengl.MyGLSurfaceView
+import com.zzs.learnopengl.R
 import com.zzs.learnopengl.renderer.chapter1_8.GestureCameraRenderer
 import com.zzs.learnopengl.util.BaseOpenGLES
 import javax.microedition.khronos.egl.EGLConfig
@@ -19,7 +21,7 @@ class MyRender(val context: Context, val myGLSurfaceView: MyGLSurfaceView) :GLSu
 
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
         GLES31.glClearColor(0.2f, 0.3f, 0.3f, 1.0f)
-        mRenderer = GestureCameraRenderer(context,R.mipmap.background,R.mipmap.wall)
+        mRenderer = GestureCameraRenderer(context, R.mipmap.background, R.mipmap.wall)
         (mRenderer as GestureCameraRenderer).setGlSurface(myGLSurfaceView)
        // mRenderer = Coords3DRenderer(context,R.mipmap.background,R.mipmap.girl)
        // mRenderer = MatrixRenderer(context,R.mipmap.nums,R.mipmap.awesomeface)

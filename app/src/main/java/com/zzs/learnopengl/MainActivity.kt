@@ -1,12 +1,8 @@
 package com.zzs.learnopengl
 
-import android.opengl.GLES32
-import android.opengl.GLUtils
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.widget.SeekBar
-import androidx.appcompat.widget.AppCompatSeekBar
 import com.zzs.learnopengl.widget.CameraGestureView
 
 class MainActivity : AppCompatActivity() {

@@ -5,15 +5,15 @@ out vec4 vColor;
 in vec2 TexCoord;
 
 uniform sampler2D outTexture;
-uniform sampler2D outTexture2;
+uniform samplerExternalOES outTexture2;
 
 void main(){
    // vColor =  texture(outTexture, TexCoord) * ourColor; //单个纹理采样
     //vColor = mix(texture(outTexture,TexCoord),texture(outTexture2,TexCoord),0.2); //正常渲染纹理（会翻转）
     vec2 reverseTexCoord = vec2(TexCoord.x,1.0 -TexCoord.y);
     vec4 background = texture(outTexture,reverseTexCoord);
-    vec4 content = texture(outTexture2,reverseTexCoord);
-    vColor = mix(background,content,0.8);
+    vec4 content = texture(outTexture2,TexCoord);
+    vColor = mix(background,content,1.0);
 
     //一下代码实现了笑脸渲染在左边的上面跟下面
 //    vec2 reverseTexCoord = vec2(TexCoord.x,1.0 -TexCoord.y);
