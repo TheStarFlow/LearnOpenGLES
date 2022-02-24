@@ -20,7 +20,7 @@ import com.zzs.learnopengl.glrender.MyVideoRender
  */
 class MyGLSurfaceView : GLSurfaceView {
 
-    private val renderer: MyVideoRender
+    private val renderer: MyRender
 
     private val sHandler = Handler(Looper.getMainLooper())
     private lateinit var sRunnable: Runnable
@@ -39,9 +39,9 @@ class MyGLSurfaceView : GLSurfaceView {
         } else {
             setEGLContextClientVersion(2)
         }
-        renderer = MyVideoRender(context, this)
+        renderer = MyRender(context, this)
         setRenderer(renderer)
-        renderMode = GLSurfaceView.RENDERMODE_WHEN_DIRTY
+        renderMode = RENDERMODE_CONTINUOUSLY
         if (postInterval) {
             sRunnable = Runnable {
                 requestRender()

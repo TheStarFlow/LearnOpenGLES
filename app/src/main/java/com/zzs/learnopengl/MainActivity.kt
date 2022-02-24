@@ -17,7 +17,7 @@ class MainActivity : AppCompatActivity() {
         gesture.moveCallBack = object :CameraGestureView.OnMoveCallBack{
 
             override fun onMove(dx: Float, dy: Float, currSpeed: Float) {
-                Log.d("Gesture","dx:$dx  dy:$dy currSpeed:$currSpeed")
+               // Log.d("Gesture","dx:$dx  dy:$dy currSpeed:$currSpeed")
                 mMyGLSurfaceView.setOnMove(-dx,dy,currSpeed)
             }
         }
