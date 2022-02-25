@@ -10,6 +10,8 @@ out vec4 fragColor;
 uniform float u_ResolutionWidth;
 uniform float u_ResolutionHeight;
 
+//shadertoy 中的mainImage(out vec4 fragColor,in vec2 fragCoord)
+//fragCoord 为没有归一化的屏幕坐标
 
 vec2 triangle_wave(vec2 a, float scale){
     return abs(fract((a+c1.xy)*scale)-0.5);

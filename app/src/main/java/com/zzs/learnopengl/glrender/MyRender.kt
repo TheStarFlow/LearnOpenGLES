@@ -6,6 +6,7 @@ import com.zzs.learnopengl.MyGLSurfaceView
 import com.zzs.learnopengl.R
 import com.zzs.learnopengl.renderer.chapter1_8.GestureCameraRenderer
 import com.zzs.learnopengl.renderer.practice.AlienBiology
+import com.zzs.learnopengl.renderer.practice.Ripples
 import com.zzs.learnopengl.util.BaseOpenGLES
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
@@ -23,7 +24,8 @@ class MyRender(val context: Context, val myGLSurfaceView: MyGLSurfaceView) :
 
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
         GLES31.glClearColor(0.2f, 0.3f, 0.3f, 1.0f)
-        mRenderer = AlienBiology(context)
+        mRenderer = Ripples(context)
+        //mRenderer = AlienBiology(context)
         // mRenderer = GestureCameraRenderer(context, R.mipmap.background, R.mipmap.wall)
         //(mRenderer as GestureCameraRenderer).setGlSurface(myGLSurfaceView)
         // mRenderer = Coords3DRenderer(context,R.mipmap.background,R.mipmap.girl)
